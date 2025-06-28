@@ -1,0 +1,70 @@
+{
+  "name": "keyboard-visualizer",
+  "version": "1.0.0",
+  "description": "A keyboard visualizer application for streaming and OBS",
+  "main": "src/main.js",
+  "homepage": ".",
+  "scripts": {
+    "start": "electron .",
+    "install-python-deps": "pip install -r requirements.txt",
+    "install-hook": "pip install pynput python-socketio",
+    "start-hook": "python src/key_hook.py",
+    "start-hook-admin": "run_as_admin.bat",
+    "start-all": "start cmd /c \"npm run start-hook\" && npm start",
+    "build": "electron-builder",
+    "build-python": "pyinstaller --onefile --distpath ./dist-python --workpath ./build-python src/key_hook.py",
+    "prebuild": "npm run build-python",
+    "dist": "npm run build",
+    "pack": "electron-builder --dir"
+  },
+  "author": "GroupXyz",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^29.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "dependencies": {
+    "socket.io": "^4.7.4",
+    "socket.io-client": "^4.7.4"
+  },
+  "build": {
+    "appId": "com.groupxyz.keyboardvisualizer",
+    "productName": "Keyboard Visualizer",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "dist-python/key_hook.exe",
+        "to": "key_hook.exe"
+      },
+      {
+        "from": "Start_Keyboard_Visualizer.vbs",
+        "to": "Start_Keyboard_Visualizer.vbs"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/keyboard.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Keyboard Visualizer"
+    }
+  }
+}
